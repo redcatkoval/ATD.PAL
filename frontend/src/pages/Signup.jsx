@@ -26,7 +26,6 @@ const Signup = ({ onSignup }) => {
   return (
     <div className="w-full h-screen bg-white flex flex-col justify-center items-center p-3">
       <div className="w-full max-w-md flex flex-col justify-start items-center gap-6">
-        <Logo variant="auth" />
         <div className="mb-[24px]">
           <LogoSymbol />
         </div>

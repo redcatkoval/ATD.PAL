@@ -24,23 +24,44 @@ const ChatPage = ({ onLogout }) => {
 
   useEffect(() => {
     if (messages.length === 0) {
-      setMessages([
-        {
-          id: 1,
-          sender: 'ai',
-          text: "Hello! 👋 I'm ATD.PAL, your new digital assistant. Nice to meet you! I'm here to help you with work tasks and answer your questions. You can type to me or just click the microphone icon and speak.",
-          component: null
-        },
-        {
-          id: 2,
-          sender: 'ai',
-          text: "Here are my main functions:",
-          component: {
-            name: 'ToolSelector',
-            props: { tools }
-          }
-        }
-      ]);
+      const hasVisited = localStorage.getItem('hasVisitedBefore');
+      if (!hasVisited) {
+        setMessages([
+          {
+            id: 1,
+            sender: 'ai',
+            text: "Hello! 👋 I'm ATD.PAL, your new digital assistant. Nice to meet you! I'm here to help you with work tasks and answer your questions. You can type to me or just click the microphone icon and speak.",
+            component: null,
+          },
+          {
+            id: 2,
+            sender: 'ai',
+            text: 'Here are my main functions:',
+            component: {
+              name: 'ToolSelector',
+              props: { tools },
+            },
+          },
+        ]);
+        localStorage.setItem('hasVisitedBefore', 'true');
+      } else {
+        setMessages([
+          {
+            id: 1,
+            sender: 'ai',
+            text: 'Glad to see you again! How can I help?',
+          },
+          {
+            id: 2,
+            sender: 'ai',
+            text: "Here's a reminder of my functions:",
+            component: {
+              name: 'ToolSelector',
+              props: { tools },
+            },
+          },
+        ]);
+      }
     }
   }, [messages.length]);
 
