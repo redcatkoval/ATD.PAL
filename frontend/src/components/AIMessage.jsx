@@ -5,8 +5,13 @@ import GoalList from './GoalList';
 import { QuickActions } from './QuickActions';
 import { ToolSelector } from './ToolSelector';
 
+const componentMap = {
+  ToolSelector,
+};
+
 const AIMessage = ({ message, onAction }) => {
   const { text, component } = message;
+  const Component = component ? componentMap[component.name] : null;
 
   const renderComponent = () => {
     if (!component) return null;
@@ -29,8 +34,10 @@ const AIMessage = ({ message, onAction }) => {
   };
 
   return (
-    <div className="max-w-[564px] w-fit flex flex-col items-start my-4">
-      {text && <p className="text-gray-800 mb-2">{text}</p>}
+    <div className="max-w-[564px] w-fit flex flex-col items-start gap-2">
+      {text && (
+        <p className="text-base font-normal font-inter text-gray-800">{text}</p>
+      )}
       {renderComponent()}
     </div>
   );

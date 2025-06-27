@@ -11,7 +11,7 @@ export const QuickActions = ({ actions, onAction }) => {
         <button
           key={action.name}
           onClick={() => onAction(action.name)}
-          className="bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-300 rounded-lg shadow-sm transition-colors"
+          className="btn-primary"
         >
           {action.name}
         </button>

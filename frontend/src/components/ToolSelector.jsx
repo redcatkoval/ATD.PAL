@@ -1,53 +1,44 @@
-import React from 'react';
-import {
-  BooksLibraryIcon,
-  BusinessCardsIcon,
-  TeamGoalsIcon,
-  LicensesIcon,
-  DesignResourcesIcon,
-  GuidelinesIcon,
-} from './Icons';
+import React, { useState } from 'react';
 
-const iconMap = {
-  'Books Library': BooksLibraryIcon,
-  'Business Cards': BusinessCardsIcon,
-  'Team Goals': TeamGoalsIcon,
-  'Licenses': LicensesIcon,
-  'Design Resources': DesignResourcesIcon,
-  'Guidelines': GuidelinesIcon,
-};
-
-const ToolButton = ({ name, onAction }) => {
-  const Icon = iconMap[name];
+const ToolButton = ({ name, icon: Icon, onAction, isActive }) => {
   return (
     <button
       onClick={() => onAction(name)}
-      className="flex items-center justify-start gap-2 w-full sm:w-auto flex-1 bg-white hover:bg-gray-50 text-zinc-600 text-base font-normal py-3 px-4 rounded-lg border border-neutral-300 hover:border-neutral-400 transition-all"
+      className={`px-4 py-3 rounded-2xl inline-flex justify-start items-center gap-2 font-normal font-['Inter'] leading-normal outline outline-2 -outline-offset-2 transition-colors ${
+        isActive
+          ? 'bg-[#FFF7F2] text-[#F85A00] outline-[#F85A00]'
+          : 'text-zinc-600 outline-inputBorder'
+      }`}
     >
-      {Icon && <Icon className="w-5 h-5" />}
-      <span className="font-inter">{name}</span>
+      <Icon className="w-5 h-5" color={isActive ? '#F85A00' : '#636363'} />
+      <span>{name}</span>
     </button>
   );
 };
 
 export const ToolSelector = ({ tools, onAction }) => {
+  const [activeButton, setActiveButton] = useState(null);
+
   if (!tools || tools.length === 0) {
     return null;
   }
 
-  const rows = [];
-  for (let i = 0; i < tools.length; i += 3) {
-    rows.push(tools.slice(i, i + 3));
-  }
+  const handleAction = (name) => {
+    setActiveButton(name);
+    onAction(name);
+    setTimeout(() => setActiveButton(null), 300);
+  };
 
   return (
-    <div className="flex flex-col items-start gap-2 w-full max-w-xl">
-      {rows.map((row, rowIndex) => (
-        <div key={rowIndex} className="flex flex-col sm:flex-row gap-2 w-full">
-          {row.map((tool) => (
-            <ToolButton key={tool.name} name={tool.name} onAction={onAction} />
-          ))}
-        </div>
+    <div className="flex flex-wrap gap-2 w-full max-w-xl">
+      {tools.map((tool) => (
+        <ToolButton
+          key={tool.name}
+          name={tool.name}
+          icon={tool.icon}
+          onAction={handleAction}
+          isActive={activeButton === tool.name}
+        />
       ))}
     </div>
   );

@@ -3,18 +3,19 @@ import MainLayout from '../components/MainLayout';
 import { InputArea } from '../components/InputArea';
 import AIMessage from '../components/AIMessage';
 import UserMessage from '../components/UserMessage';
+import { BooksLibraryIcon, BusinessCardsIcon, TeamGoalsIcon, GuidelinesIcon, LicensesIcon, DesignResourcesIcon } from '../components/Icons';
 
 const ChatPage = ({ onLogout }) => {
   const [messages, setMessages] = useState([]);
   const messagesEndRef = useRef(null);
 
   const tools = [
-    { name: 'Books Library' },
-    { name: 'Business Cards' },
-    { name: 'Team Goals' },
-    { name: 'Licenses' },
-    { name: 'Design Resources' },
-    { name: 'Guidelines' },
+    { name: 'Books Library', icon: BooksLibraryIcon },
+    { name: 'Business Cards', icon: BusinessCardsIcon },
+    { name: 'Team Goals', icon: TeamGoalsIcon },
+    { name: 'Licenses', icon: LicensesIcon },
+    { name: 'Design Resources', icon: DesignResourcesIcon },
+    { name: 'Guidelines', icon: GuidelinesIcon },
   ];
 
   useEffect(() => {
@@ -59,16 +60,28 @@ const ChatPage = ({ onLogout }) => {
 
   return (
     <MainLayout onLogout={onLogout}>
-      <div className="flex-grow overflow-y-auto p-4 space-y-4">
-        {messages.map(msg =>
-          msg.sender === 'user' ? (
-            <div key={msg.id} className="flex justify-end">
-              <UserMessage text={msg.text} />
+      <div className="flex-grow overflow-y-auto p-4 flex flex-col">
+        {messages.map((msg, index) => {
+          const prevSender = index > 0 ? messages[index - 1].sender : null;
+          const marginTopClass =
+            index === 0
+              ? ''
+              : msg.sender === prevSender
+              ? 'mt-2' // 8px
+              : 'mt-6'; // 24px
+
+          return (
+            <div key={msg.id} className={marginTopClass}>
+              {msg.sender === 'user' ? (
+                <div className="flex justify-end">
+                  <UserMessage text={msg.text} />
+                </div>
+              ) : (
+                <AIMessage message={msg} onAction={handleSendMessage} />
+              )}
             </div>
-          ) : (
-            <AIMessage key={msg.id} message={msg} onAction={handleSendMessage} />
-          )
-        )}
+          );
+        })}
         <div ref={messagesEndRef} />
       </div>
       <InputArea onSendMessage={handleSendMessage} />

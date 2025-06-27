@@ -2,8 +2,8 @@ import React from 'react';
 
 const UserMessage = ({ text }) => {
   return (
-    <div className="bg-orange-500 text-white p-3 rounded-lg max-w-lg">
-      {text}
+    <div className="max-w-[564px] bg-[#F9FAFB] rounded-2xl p-4">
+      <p className="text-base font-normal font-inter text-gray-800">{text}</p>
     </div>
   );
 };

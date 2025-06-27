@@ -1,3 +1,5 @@
+const plugin = require("tailwindcss/plugin");
+
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   content: [
@@ -45,28 +47,28 @@ module.exports = {
         'inter': ['Inter', 'sans-serif'],
         'montserrat': ['Montserrat', 'sans-serif'],
       },
-      spacing: {
-        '0': 'var(--space-0)',
-        '4': 'var(--space-4)',
-        '8': 'var(--space-8)',
-        '12': 'var(--space-12)',
-        '16': 'var(--space-16)',
-        '20': 'var(--space-20)',
-        '24': 'var(--space-24)',
-        '32': 'var(--space-32)',
-        '48': 'var(--space-48)',
-      },
-      borderRadius: {
-        '0': 'var(--radius-0)',
-        '6': 'var(--radius-6)',
-        '8': 'var(--radius-8)',
-        '12': 'var(--radius-12)',
-        '16': 'var(--radius-16)',
-      },
+      spacing: {},
+      borderRadius: {},
       screens: {
         'mobile': '564px',
       },
     },
   },
-  plugins: [],
+  plugins: [
+    plugin(function({ addComponents, theme }) {
+      addComponents({
+        '.btn-primary': {
+          padding: '12px 16px',
+          backgroundColor: theme('colors.primary.DEFAULT'),
+          color: theme('colors.ctaText'),
+          borderRadius: theme('borderRadius.lg'),
+          fontWeight: '600',
+          '&:hover': {
+            backgroundColor: theme('colors.primary.hover'),
+          },
+          whiteSpace: 'nowrap',
+        },
+      })
+    })
+  ],
 }
