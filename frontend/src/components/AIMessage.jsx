@@ -10,7 +10,18 @@ const componentMap = {
 };
 
 const AIMessage = ({ message, onAction }) => {
-  const { text, component } = message;
+  const { text, component, isTyping } = message;
+
+  if (isTyping) {
+    return (
+      <div className="max-w-[564px] w-fit flex items-center gap-2">
+        <div className="bg-gray-200 rounded-full w-2 h-2 animate-bounce [animation-delay:-0.3s]"></div>
+        <div className="bg-gray-200 rounded-full w-2 h-2 animate-bounce [animation-delay:-0.15s]"></div>
+        <div className="bg-gray-200 rounded-full w-2 h-2 animate-bounce"></div>
+      </div>
+    );
+  }
+
   const Component = component ? componentMap[component.name] : null;
 
   const renderComponent = () => {

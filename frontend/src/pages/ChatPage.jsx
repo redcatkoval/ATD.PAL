@@ -45,33 +45,40 @@ const ChatPage = ({ onLogout }) => {
   }, [messages.length]);
 
   const handleSendMessage = (text) => {
-    const newMessage = { id: Date.now(), sender: 'user', text };
-    setMessages(prev => [...prev, newMessage]);
+    const userMessage = { id: Date.now(), sender: 'user', text };
+    const typingMessageId = Date.now() + 1;
+    const typingMessage = { id: typingMessageId, sender: 'ai', isTyping: true };
 
-    // Dummy AI response for now
-    const aiResponse = {
-        id: Date.now() + 1,
+    setMessages(prev => [...prev, userMessage, typingMessage]);
+
+    setTimeout(() => {
+      const aiResponse = {
+        id: typingMessageId,
         sender: 'ai',
-        text: `Tool "${text}" selected. This feature is not yet implemented.`
-    };
-    
-    setMessages(prev => [...prev, aiResponse]);
+        text: `Tool "${text}" selected. This feature is not yet implemented.`,
+        isTyping: false
+      };
+
+      setMessages(prev => prev.map(msg => msg.id === typingMessageId ? aiResponse : msg));
+    }, 1000); // Simulate network delay
   };
 
   return (
     <MainLayout onLogout={onLogout}>
-      <div className="flex-grow overflow-y-auto p-4 flex flex-col">
-        {messages.map((msg, index) => {
-          const prevSender = index > 0 ? messages[index - 1].sender : null;
-          const marginTopClass =
+      <div className="flex-grow overflow-y-auto py-4 flex flex-col-reverse">
+        <div ref={messagesEndRef} />
+        {[...messages].reverse().map((msg, index, reversedArray) => {
+          const prevMessage = reversedArray[index - 1];
+          const prevSender = prevMessage ? prevMessage.sender : null;
+          const marginBottomClass =
             index === 0
               ? ''
               : msg.sender === prevSender
-              ? 'mt-2' // 8px
-              : 'mt-6'; // 24px
+              ? 'mb-2' // 8px
+              : 'mb-6'; // 24px
 
           return (
-            <div key={msg.id} className={marginTopClass}>
+            <div key={msg.id} className={marginBottomClass}>
               {msg.sender === 'user' ? (
                 <div className="flex justify-end">
                   <UserMessage text={msg.text} />
@@ -82,7 +89,6 @@ const ChatPage = ({ onLogout }) => {
             </div>
           );
         })}
-        <div ref={messagesEndRef} />
       </div>
       <InputArea onSendMessage={handleSendMessage} />
     </MainLayout>
